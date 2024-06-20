@@ -49,6 +49,24 @@ class UserController {
         });
     }
 
+    async getByName(req: Request, res: Response): Promise<ReturnResponse> {
+        // parsing username
+        const username: string = req.params.username;
+
+        const user: User = await UserService.getByName(username);
+        return res.status(200).json({
+            message: 'User fetched successfully',
+            user: {
+                id: user.id,
+                username: user.username,
+                timestamps: {
+                    createdAt: user.createdAt,
+                    updatedAt: user.updatedAt
+                }
+            }
+        })
+    }
+
     async create(req: Request, res: Response): Promise<ReturnResponse> {
         // parsing body
         const { username, password }: { username: string, password: string } = req.body;
