@@ -20,6 +20,13 @@ class UserService {
         return user;
     }
 
+    async getByName(username: string): Promise<User> {
+        const user: User | null = await UserDAO.getByName(username);
+
+        if (!user) throw new NotFoundException('User with this username does not exist');
+        return user;
+    }
+
     // creates a user
     // throws exception if conflict
     async create(username: string, password: string): Promise<void> {
