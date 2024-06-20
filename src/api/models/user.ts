@@ -5,13 +5,12 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
     declare id: CreationOptional<number>;
     declare username: string;
     declare password: string;
-    declare createdAt: CreationOptional<Date>;
 }
 
 User.init(
     {
         id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.INTEGER.UNSIGNED,
             primaryKey: true,
             autoIncrement: true
         },
@@ -22,13 +21,11 @@ User.init(
         password: {
             type: DataTypes.STRING,
             allowNull: false
-        },
-        createdAt: DataTypes.DATE
+        }
     },
     {
         sequelize,
-        tableName: 'users',
-        updatedAt: false
+        tableName: 'users'
     }
 );
 
