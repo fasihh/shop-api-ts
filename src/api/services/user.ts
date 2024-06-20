@@ -1,5 +1,5 @@
 import UserDAO from '../daos/user';
-import AlreadyExistsException from '../exceptions/already_exists';
+import ResourceConflictException from '../exceptions/resource_conflict';
 import NotFoundException from '../exceptions/not_found';
 import type User from '../models/user';
 import bcrypt from 'bcrypt';
@@ -25,7 +25,7 @@ class UserService {
     async create(username: string, password: string): Promise<void> {
         const user: User | null = await UserDAO.getByName(username);
 
-        if (user) throw new AlreadyExistsException('A user with this name already exists');
+        if (user) throw new ResourceConflictException('A user with this name already exists');
         await UserDAO.create(username, await bcrypt.hash(password, 10));
     }
 
@@ -36,15 +36,6 @@ class UserService {
 
         if (!user) throw new NotFoundException('User does not exist');
         await UserDAO.update(id, username, password);
-    }
-
-    // deletes user by id
-    // throws exception if DNE
-    async delete(id: number): Promise<void> {
-        const user: User | null = await UserDAO.getById(id);
-
-        if (!user) throw new NotFoundException('User does not exist');
-        await UserDAO.delete(id);
     }
 }
 
