@@ -5,11 +5,14 @@ import type User from '../models/user';
 import bcrypt from 'bcrypt';
 
 class UserService {
+    // gets all users
     async getAll(): Promise<User[]> {
         const users: User[] = await UserDAO.getAll();
         return users;
     }
 
+    // gets user by id
+    // throws exception if cannot find
     async getById(id: number): Promise<User> {
         const user: User | null = await UserDAO.getById(id);
 
@@ -17,6 +20,8 @@ class UserService {
         return user;
     }
 
+    // creates a user
+    // throws exception if conflict
     async create(username: string, password: string): Promise<void> {
         const user: User | null = await UserDAO.getByName(username);
 
@@ -24,6 +29,8 @@ class UserService {
         await UserDAO.create(username, await bcrypt.hash(password, 10));
     }
 
+    // updates by id of the username and/or password of the user
+    // throws exception if already exists
     async update(id: number, username: string | undefined, password: string | undefined): Promise<void> {
         const user: User | null = await UserDAO.getById(id);
 
