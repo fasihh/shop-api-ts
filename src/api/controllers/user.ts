@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import UserService from '../services/user';
 import type User from '../models/user';
-import InvalidID from '../exceptions/invalid_id';
+import InvalidIDException from '../exceptions/invalid_id';
 
 type ReturnResponse = Response<any, Record<string, any>>;
 
@@ -28,7 +28,7 @@ class UserController {
         const id: number = parseInt(req.params.id);
 
         // checking if id valid
-        if (isNaN(id)) throw new InvalidID;
+        if (isNaN(id)) throw new InvalidIDException;
 
         // getting user
         const user: User = await UserService.getById(id);
@@ -53,23 +53,37 @@ class UserController {
         // parsing body
         const { username, password }: { username: string, password: string } = req.body;
 
+        // creating user
         await UserService.create(username, password);
-        return res.status(201).json({ message: 'User created successfully' });
+        return res.status(201).json({
+            message: 'User created successfully'
+        });
     }
 
     async updateById(req: Request, res: Response): Promise<ReturnResponse> {
-        // parsing id
         const id: number = parseInt(req.params.id);
 
-        if (isNaN(id)) throw new InvalidID;
+        if (isNaN(id)) throw new InvalidIDException;
 
         // parsing body
         const { username, password }: { username?: string, password?: string } = req.body;
         // updating user
         await UserService.update(id, username, password);
+        return res.status(200).json({
+            message: 'User updated successfully'
+        });
+    }
 
-        // success status
-        return res.status(200).json({ message: 'User updated successfully' });
+    async deleteById(req: Request, res: Response): Promise<ReturnResponse> {
+        const id: number = parseInt(req.params.id);
+        
+        if (isNaN(id)) throw new InvalidIDException;
+        
+        // deleting user
+        await UserService.delete(id);
+        return res.status(200).json({
+            message: 'User deleted successfully'
+        });
     }
 }
 
