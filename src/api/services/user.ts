@@ -12,7 +12,7 @@ class UserService {
     }
 
     // gets user by id
-    // throws exception if cannot find
+    // throws exception if DNE
     async getById(id: number): Promise<User> {
         const user: User | null = await UserDAO.getById(id);
 
@@ -36,6 +36,15 @@ class UserService {
 
         if (!user) throw new NotFoundException('User does not exist');
         await UserDAO.update(id, username, password);
+    }
+
+    // deletes user by id
+    // throws exception if DNE
+    async delete(id: number): Promise<void> {
+        const user: User | null = await UserDAO.getById(id);
+
+        if (!user) throw new NotFoundException('User does not exist');
+        await UserDAO.delete(id);
     }
 }
 
