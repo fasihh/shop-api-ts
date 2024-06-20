@@ -18,4 +18,7 @@ router.post('/', asyncHandler(UserController.create.bind(UserController)));
 // update user
 router.patch('/:id', asyncHandler(UserController.updateById.bind(UserController)));
 
+// delete user
+router.delete('/:id', asyncHandler(UserController.deleteById.bind(UserController)));
+
 export default router;
