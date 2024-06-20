@@ -34,6 +34,11 @@ class UserDAO {
             password
         }, { where: { id } });
     }
+
+    // deletes user by id
+    async delete(id: number): Promise<void> {
+        await User.destroy({ where: { id } });
+    }
 }
 
 const UserDAOInst = new UserDAO;
