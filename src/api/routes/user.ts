@@ -10,7 +10,10 @@ const router: Router = Router();
 router.get('/', asyncHandler(UserController.getAll.bind(UserController)));
 
 // get user by id
-router.get('/:id', asyncHandler(UserController.getById.bind(UserController)));
+router.get('/id/:id', asyncHandler(UserController.getById.bind(UserController)));
+
+// get user by name
+router.get('/username/:username', asyncHandler(UserController.getByName.bind(UserController)));
 
 // create user
 router.post('/', asyncHandler(UserController.create.bind(UserController)));
