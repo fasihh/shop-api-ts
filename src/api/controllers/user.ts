@@ -69,12 +69,32 @@ class UserController {
 
     async create(req: Request, res: Response): Promise<ReturnResponse> {
         // parsing body
-        const { username, password }: { username: string, password: string } = req.body;
+        const { username, password }: { username: string | undefined, password: string | undefined } = req.body;
+
+        if (!username || !password) return res.status(400).json({
+            message: 'Username and password are required'
+        });
 
         // creating user
         await UserService.create(username, password);
         return res.status(201).json({
             message: 'User created successfully'
+        });
+    }
+
+    async login(req: Request, res: Response): Promise<ReturnResponse> {
+        // parsing body
+        const { username, password }: { username: string | undefined, password: string | undefined } = req.body;
+
+        if (!username || !password) return res.status(400).json({
+            message: 'Username and password are required'
+        });
+
+        const token: string = await UserService.login(username, password);
+        return res.status(200).json({
+            message: 'Login successful',
+            token_type: 'Bearer',
+            token
         });
     }
 

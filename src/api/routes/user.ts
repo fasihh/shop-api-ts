@@ -2,6 +2,8 @@ import { Router } from 'express';
 import UserController from '../controllers/user';
 import asyncHandler from '../utils/async_handler';
 
+import authHandler from '../auth/jwtAuth';
+
 const router: Router = Router();
 
 /* User endpoints */
@@ -17,6 +19,7 @@ router.get('/username/:username', asyncHandler(UserController.getByName.bind(Use
 
 // create user
 router.post('/', asyncHandler(UserController.create.bind(UserController)));
+router.post('/login', asyncHandler(UserController.login.bind(UserController)));
 
 // update user
 router.patch('/:id', asyncHandler(UserController.updateById.bind(UserController)));

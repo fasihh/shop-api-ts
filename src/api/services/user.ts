@@ -3,6 +3,11 @@ import ResourceConflictException from '../exceptions/resource_conflict';
 import NotFoundException from '../exceptions/not_found';
 import type User from '../models/user';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import RequestError from '../exceptions/request_error';
+
+import dotenv from 'dotenv';
+dotenv.config();
 
 class UserService {
     // gets all users
@@ -34,6 +39,27 @@ class UserService {
 
         if (user) throw new ResourceConflictException('A user with this name already exists');
         await UserDAO.create(username, await bcrypt.hash(password, 10));
+    }
+
+    async login(username: string, password: string): Promise<string> {
+        const user: User | null = await UserDAO.getByName(username);
+        if (!user) throw new RequestError('Auth failure', 401);
+
+        const status: boolean = await bcrypt.compare(password, user.password);
+        if (!status) throw new RequestError('Auth failure', 401);
+
+        const token: string = jwt.sign({
+                id: user.id,
+                username: user.username,
+                createdAt: user.createdAt
+            },
+            process.env.JWT_KEY || 'secret',
+            {
+                expiresIn: process.env.MODE === 'dev' ? undefined : '1d'
+            }
+        );
+
+        return token;
     }
 
     // updates by id of the username and/or password of the user
