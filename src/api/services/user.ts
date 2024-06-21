@@ -1,12 +1,12 @@
 import UserDAO from '../daos/user';
-import ResourceConflictException from '../exceptions/resource_conflict';
-import NotFoundException from '../exceptions/not_found';
 import type User from '../models/user';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import RequestError from '../exceptions/request_error';
+import { ExceptionType } from '../types/exceptions';
 
 import dotenv from 'dotenv';
+
 dotenv.config();
 
 class UserService {
@@ -21,14 +21,14 @@ class UserService {
     async getById(id: number): Promise<User> {
         const user: User | null = await UserDAO.getById(id);
 
-        if (!user) throw new NotFoundException('User with this id does not exist');
+        if (!user) throw new RequestError(ExceptionType.USER_NOT_FOUND);
         return user;
     }
 
     async getByName(username: string): Promise<User> {
         const user: User | null = await UserDAO.getByName(username);
 
-        if (!user) throw new NotFoundException('User with this username does not exist');
+        if (!user) throw new RequestError(ExceptionType.USER_NOT_FOUND);
         return user;
     }
 
@@ -37,7 +37,7 @@ class UserService {
     async create(username: string, password: string): Promise<void> {
         const user: User | null = await UserDAO.getByName(username);
 
-        if (user) throw new ResourceConflictException('User with this username already exists');
+        if (user) throw new RequestError(ExceptionType.USER_CONFLICT);
         await UserDAO.create(username, await bcrypt.hash(password, 10));
     }
 
@@ -46,11 +46,11 @@ class UserService {
     async login(username: string, password: string): Promise<string> {
         // checking if user exixts
         const user: User | null = await UserDAO.getByName(username);
-        if (!user) throw new RequestError('Auth failure', 401);
+        if (!user) throw new RequestError(ExceptionType.AUTH_FAILURE);
 
         // checking password
         const status: boolean = await bcrypt.compare(password, user.password);
-        if (!status) throw new RequestError('Auth failure', 401);
+        if (!status) throw new RequestError(ExceptionType.AUTH_FAILURE);
 
         // creating auth token
         const token: string = jwt.sign({
@@ -72,7 +72,7 @@ class UserService {
     async update(id: number, username: string | undefined, password: string | undefined): Promise<void> {
         const user: User | null = await UserDAO.getById(id);
 
-        if (!user) throw new NotFoundException('User with this id does not exist');
+        if (!user) throw new RequestError(ExceptionType.USER_NOT_FOUND);
         await UserDAO.update(id, username, password);
     }
 
@@ -81,7 +81,7 @@ class UserService {
     async delete(id: number): Promise<void> {
         const user: User | null = await UserDAO.getById(id);
 
-        if (!user) throw new NotFoundException('User with this id does not exist');
+        if (!user) throw new RequestError(ExceptionType.USER_NOT_FOUND);
         await UserDAO.delete(id);
     }
 }

@@ -2,6 +2,8 @@ import { Router } from 'express';
 import UserController from '../controllers/user';
 import asyncHandler from '../utils/async_handler';
 
+import authHandler from '../auth/jwtAuth';
+
 const router: Router = Router();
 
 /* User endpoints */
@@ -20,9 +22,9 @@ router.post('/', asyncHandler(UserController.create.bind(UserController)));
 router.post('/login', asyncHandler(UserController.login.bind(UserController)));
 
 // update user
-router.patch('/:id', asyncHandler(UserController.updateById.bind(UserController)));
+router.patch('/:id', authHandler, asyncHandler(UserController.updateById.bind(UserController)));
 
 // delete user
-router.delete('/:id', asyncHandler(UserController.deleteById.bind(UserController)));
+router.delete('/:id', authHandler, asyncHandler(UserController.deleteById.bind(UserController)));
 
 export default router;

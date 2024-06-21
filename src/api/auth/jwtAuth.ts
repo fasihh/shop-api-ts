@@ -3,6 +3,8 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 
 import dotenv from 'dotenv';
 import { ReturnResponse } from '../types';
+import RequestError from '../exceptions/request_error';
+import { ExceptionType } from '../types/exceptions';
 dotenv.config();
 
 const authHandler = (req: Request, res: Response, next: NextFunction): ReturnResponse | void => {
@@ -23,7 +25,7 @@ const authHandler = (req: Request, res: Response, next: NextFunction): ReturnRes
         req.user = decoded;
         next();
     } catch (error) {
-        return res.status(401).json({ message: 'Unauthorized' });
+        throw new RequestError(ExceptionType.UNAUTHORIZED);
     }
 }
 

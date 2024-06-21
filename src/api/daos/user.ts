@@ -14,7 +14,7 @@ class UserDAO {
     }
 
     // get all users
-    async getAll(): Promise<User[]> {
+    async getAll(options?: any): Promise<User[]> {
         const users: User[] = await User.findAll();
         return users;
     }

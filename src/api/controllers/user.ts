@@ -1,15 +1,15 @@
 import { Request, Response } from 'express';
 import UserService from '../services/user';
-import InvalidIDException from '../exceptions/invalid_id';
 import type User from '../models/user';
 import type { ReturnResponse } from '../types';
+import RequestError from '../exceptions/request_error';
+import { ExceptionType } from '../types/exceptions';
 
 class UserController {
     async getAll(req: Request, res: Response): Promise<ReturnResponse> {
         // getting users
         const users: User[] = await UserService.getAll();
 
-        // send users
         return res.status(200).json({
             message: 'Users fetched successfully',
             // send count as 0 and 'users' empty if no users
@@ -27,17 +27,11 @@ class UserController {
         const id: number = parseInt(req.params.id);
 
         // checking if id valid
-        if (isNaN(id)) throw new InvalidIDException;
+        if (isNaN(id)) throw new RequestError(ExceptionType.INVALID_ID);
 
         // getting user
         const user: User = await UserService.getById(id);
 
-        // 404 if user DNE
-        if (!user) return res.status(404).json({
-            message: 'User not found'
-        });
-
-        // send user
         return res.status(200).json({
             message: 'User fetched successfully',
             user: {
@@ -55,7 +49,9 @@ class UserController {
         // parsing username
         const username: string = req.params.username;
 
+        // getting user
         const user: User = await UserService.getByName(username);
+
         return res.status(200).json({
             message: 'User fetched successfully',
             user: {
@@ -73,12 +69,11 @@ class UserController {
         // parsing body
         const { username, password }: { username: string | undefined, password: string | undefined } = req.body;
 
-        if (!username || !password) return res.status(400).json({
-            message: 'Username and password are required'
-        });
+        if (!username || !password) throw new RequestError(ExceptionType.INVALID_REQUEST);
 
         // creating user
         await UserService.create(username, password);
+
         return res.status(201).json({
             message: 'User created successfully'
         });
@@ -88,11 +83,10 @@ class UserController {
         // parsing body
         const { username, password }: { username: string | undefined, password: string | undefined } = req.body;
 
-        if (!username || !password) return res.status(400).json({
-            message: 'Username and password are required'
-        });
+        if (!username || !password) throw new RequestError(ExceptionType.INVALID_REQUEST);
 
         const token: string = await UserService.login(username, password);
+
         return res.status(200).json({
             message: 'Login successful',
             token_type: 'Bearer',
@@ -103,12 +97,13 @@ class UserController {
     async updateById(req: Request, res: Response): Promise<ReturnResponse> {
         const id: number = parseInt(req.params.id);
 
-        if (isNaN(id)) throw new InvalidIDException;
+        if (isNaN(id)) throw new RequestError(ExceptionType.INVALID_ID);
 
         // parsing body
         const { username, password }: { username?: string, password?: string } = req.body;
         // updating user
         await UserService.update(id, username, password);
+
         return res.status(200).json({
             message: 'User updated successfully'
         });
@@ -117,10 +112,11 @@ class UserController {
     async deleteById(req: Request, res: Response): Promise<ReturnResponse> {
         const id: number = parseInt(req.params.id);
         
-        if (isNaN(id)) throw new InvalidIDException;
+        if (isNaN(id)) throw new RequestError(ExceptionType.INVALID_ID);
         
         // deleting user
         await UserService.delete(id);
+
         return res.status(200).json({
             message: 'User deleted successfully'
         });
