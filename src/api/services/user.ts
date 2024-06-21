@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import RequestError from '../exceptions/request_error';
 import { ExceptionType } from '../exceptions/exceptions';
+import { Op } from 'sequelize';
 
 import dotenv from 'dotenv';
 
@@ -11,8 +12,18 @@ dotenv.config();
 
 class UserService {
     // gets all users
-    async getAll(): Promise<User[]> {
-        const users: User[] = await UserDAO.getAll();
+    async getAll(username: string | undefined, limit: string | undefined, offset: string | undefined): Promise<User[]> {
+        const users: User[] = await UserDAO.getAll({
+            where: {
+                ...(username && {
+                    username: {
+                        [Op.like]: `%${username}%` 
+                    } 
+                })
+            },
+            limit: limit ? parseInt(limit) : undefined,
+            offset: offset ? parseInt(offset) : undefined
+        });
         return users;
     }
 

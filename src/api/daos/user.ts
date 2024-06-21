@@ -1,3 +1,4 @@
+import { Attributes, FindOptions } from 'sequelize';
 import User from '../models/user';
 
 class UserDAO {
@@ -14,8 +15,8 @@ class UserDAO {
     }
 
     // get all users
-    async getAll(options?: any): Promise<User[]> {
-        const users: User[] = await User.findAll();
+    async getAll(options?: FindOptions<Attributes<User>>): Promise<User[]> {
+        const users: User[] = await User.findAll(options);
         return users;
     }
 

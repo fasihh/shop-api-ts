@@ -1,14 +1,21 @@
-import { Request, Response } from 'express';
+import { Request, Response, } from 'express';
 import UserService from '../services/user';
 import type User from '../models/user';
-import type { ReturnResponse } from '../types';
+import type { ReturnResponse, RequestParams } from '../types';
 import RequestError from '../exceptions/request_error';
 import { ExceptionType } from '../exceptions/exceptions';
 
 class UserController {
     async getAll(req: Request, res: Response): Promise<ReturnResponse> {
+        // parsing query
+        const {
+            username,
+            limit,
+            offset 
+        }: RequestParams = req.query;
+
         // getting users
-        const users: User[] = await UserService.getAll();
+        const users: User[] = await UserService.getAll(username, limit, offset);
 
         return res.status(200).json({
             message: 'Users fetched successfully',
