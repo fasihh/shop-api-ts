@@ -4,7 +4,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { ReturnResponse } from '../types';
 import RequestError from '../exceptions/request_error';
-import { ExceptionType } from '../types/exceptions';
+import { ExceptionType } from '../exceptions/exceptions';
 dotenv.config();
 
 const authHandler = (req: Request, res: Response, next: NextFunction): ReturnResponse | void => {

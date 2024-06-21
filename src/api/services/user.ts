@@ -3,7 +3,7 @@ import type User from '../models/user';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import RequestError from '../exceptions/request_error';
-import { ExceptionType } from '../types/exceptions';
+import { ExceptionType } from '../exceptions/exceptions';
 
 import dotenv from 'dotenv';
 

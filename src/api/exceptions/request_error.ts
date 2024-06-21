@@ -1,4 +1,4 @@
-import { ExceptionType, Exceptions } from "../types/exceptions";
+import { ExceptionType, Exceptions } from "./exceptions";
 
 class RequestError extends Error {
     public status?: number;

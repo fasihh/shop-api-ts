@@ -3,7 +3,7 @@ import UserService from '../services/user';
 import type User from '../models/user';
 import type { ReturnResponse } from '../types';
 import RequestError from '../exceptions/request_error';
-import { ExceptionType } from '../types/exceptions';
+import { ExceptionType } from '../exceptions/exceptions';
 
 class UserController {
     async getAll(req: Request, res: Response): Promise<ReturnResponse> {
