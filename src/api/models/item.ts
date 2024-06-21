@@ -5,6 +5,7 @@ import sequelize from "../../config/db";
 class Item extends Model<InferAttributes<Item>, InferCreationAttributes<Item>> {
     declare id: CreationOptional<number>;
     declare itemname: string;
+    declare price: number;
     declare description: CreationOptional<string>;
     declare creatorId: ForeignKey<User['id']>;
 }
@@ -18,6 +19,10 @@ Item.init(
         },
         itemname: {
             type: DataTypes.STRING,
+            allowNull: false
+        },
+        price: {
+            type: DataTypes.FLOAT.UNSIGNED,
             allowNull: false
         },
         description: {
@@ -36,4 +41,6 @@ Item.init(
         sequelize,
         tableName: 'items'
     }
-)
+);
+
+export default Item;

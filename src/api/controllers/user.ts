@@ -1,9 +1,8 @@
 import { Request, Response } from 'express';
 import UserService from '../services/user';
-import type User from '../models/user';
 import InvalidIDException from '../exceptions/invalid_id';
-
-type ReturnResponse = Response<any, Record<string, any>>;
+import type User from '../models/user';
+import type { ReturnResponse } from '../types';
 
 class UserController {
     async getAll(req: Request, res: Response): Promise<ReturnResponse> {
@@ -44,7 +43,10 @@ class UserController {
             user: {
                 id: user.id,
                 username: user.username,
-                createdAt: user.createdAt
+                timestamps: {
+                    createdAt: user.createdAt,
+                    updatedAt: user.updatedAt
+                }
             }
         });
     }

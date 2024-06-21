@@ -2,8 +2,6 @@ import { Router } from 'express';
 import UserController from '../controllers/user';
 import asyncHandler from '../utils/async_handler';
 
-import authHandler from '../auth/jwtAuth';
-
 const router: Router = Router();
 
 /* User endpoints */
