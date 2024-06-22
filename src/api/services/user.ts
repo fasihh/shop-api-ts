@@ -45,11 +45,12 @@ class UserService {
 
     // creates a user
     // throws exception if conflict
-    async create(username: string, password: string): Promise<void> {
+    async create(username: string, password: string): Promise<number> {
         const user: User | null = await UserDAO.getByName(username);
+        if (user) throw new RequestError(ExceptionType.USERNAME_CONFLICT);
 
-        if (user) throw new RequestError(ExceptionType.USER_CONFLICT);
-        await UserDAO.create(username, await bcrypt.hash(password, 10));
+        const hashed: string = await bcrypt.hash(password, 10);
+        return (await UserDAO.create(username, hashed)).id;
     }
 
     // logs in user
@@ -81,10 +82,18 @@ class UserService {
     // updates by id of the username and/or password of the user
     // throws exception if DNE
     async update(id: number, username: string | undefined, password: string | undefined): Promise<void> {
-        const user: User | null = await UserDAO.getById(id);
-
+        let user: User | null = await UserDAO.getById(id);
         if (!user) throw new RequestError(ExceptionType.USER_NOT_FOUND);
-        await UserDAO.update(id, username, password);
+
+        if (username) {
+            user = await UserDAO.getByName(username);
+            if (user?.id !== id) throw new RequestError(ExceptionType.USERNAME_CONFLICT);
+        }
+        
+        let hashed: string | undefined = password;
+        if (password) hashed = await bcrypt.hash(password, 10);
+
+        await UserDAO.update(id, username, hashed);
     }
 
     // deletes user by id

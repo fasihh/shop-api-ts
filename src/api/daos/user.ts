@@ -21,24 +21,27 @@ class UserDAO {
     }
 
     // create a user record
-    async create(username: string, password: string): Promise<void> {
-        await User.create({
+    async create(username: string, password: string): Promise<User> {
+        const user: User = await User.create({
             username,
             password
         });
+        return user;
     }
 
     // update user by id
-    async update(id: number | undefined, username: string | undefined, password: string | undefined): Promise<void> {
-        await User.update({
+    async update(id: number | undefined, username: string | undefined, password: string | undefined): Promise<number> {
+        const [count]: [affectedCount: number] = await User.update({
             username,
             password
         }, { where: { id } });
+        return count;
     }
 
     // deletes user by id
-    async delete(id: number): Promise<void> {
-        await User.destroy({ where: { id } });
+    async delete(id: number): Promise<number> {
+        const count: number = await User.destroy({ where: { id } });
+        return count;
     }
 }
 

@@ -79,10 +79,11 @@ class UserController {
         if (!username || !password) throw new RequestError(ExceptionType.INVALID_REQUEST);
 
         // creating user
-        await UserService.create(username, password);
+        const id: number = await UserService.create(username, password);
 
         return res.status(201).json({
-            message: 'User created successfully'
+            message: 'User created successfully',
+            user_id: id
         });
     }
 
@@ -102,9 +103,8 @@ class UserController {
     }
 
     async updateById(req: Request, res: Response): Promise<ReturnResponse> {
-        const id: number = parseInt(req.params.id);
-
-        if (isNaN(id)) throw new RequestError(ExceptionType.INVALID_ID);
+        // getting id from token
+        const id: number = req.user?.id;
 
         // parsing body
         const { username, password }: { username?: string, password?: string } = req.body;
@@ -117,9 +117,7 @@ class UserController {
     }
 
     async deleteById(req: Request, res: Response): Promise<ReturnResponse> {
-        const id: number = parseInt(req.params.id);
-        
-        if (isNaN(id)) throw new RequestError(ExceptionType.INVALID_ID);
+        const id: number = req.user?.id;
         
         // deleting user
         await UserService.delete(id);

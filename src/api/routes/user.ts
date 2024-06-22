@@ -22,9 +22,9 @@ router.post('/', asyncHandler(UserController.create.bind(UserController)));
 router.post('/login', asyncHandler(UserController.login.bind(UserController)));
 
 // update user
-router.patch('/:id', authHandler, asyncHandler(UserController.updateById.bind(UserController)));
+router.patch('/', authHandler, asyncHandler(UserController.updateById.bind(UserController)));
 
 // delete user
-router.delete('/:id', authHandler, asyncHandler(UserController.deleteById.bind(UserController)));
+router.delete('/', authHandler, asyncHandler(UserController.deleteById.bind(UserController)));
 
 export default router;
