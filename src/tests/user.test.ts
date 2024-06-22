@@ -105,7 +105,7 @@ describe('Delete users', () => {
         expect(response.statusCode).toBe(200);
     });
 
-    test('Delete User#1: should respond with status 200', async () => {
+    test('Delete User#2: should respond with status 200', async () => {
         const response: Response = await deleteUser(users.user2);
 
         expect(response.statusCode).toBe(200);
