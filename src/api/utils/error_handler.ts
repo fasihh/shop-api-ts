@@ -6,7 +6,8 @@ const errorHandler = (error: RequestError, req: Request, res: Response, next: Ne
     res.status(error.status || 500).json({
         error: {
             name: error.name || 'Server Error',
-            message: error.message || 'Internal Server Error'
+            message: error.message || 'Internal Server Error',
+            info: error.info
         }
     });
 }
