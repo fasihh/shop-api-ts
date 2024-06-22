@@ -4,7 +4,7 @@ import User from '../models/user';
 class UserDAO {
     // find user by id
     async getById(id: number): Promise<User | null> {
-        const user: User | null = await User.findOne({ where: { id } });
+        const user: User | null = await User.findByPk(id);
         return user;
     }
 
