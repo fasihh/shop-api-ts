@@ -87,7 +87,7 @@ class UserService {
 
         if (username) {
             user = await UserDAO.getByName(username);
-            if (user?.id !== id) throw new RequestError(ExceptionType.USERNAME_CONFLICT);
+            if (user && user.id !== id) throw new RequestError(ExceptionType.USERNAME_CONFLICT);
         }
         
         let hashed: string | undefined = password;
