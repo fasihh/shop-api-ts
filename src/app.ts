@@ -1,9 +1,8 @@
-// import express, { Express, NextFunction, Request, Response } from 'express';
 import express, { Express } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import errorHandler from './api/utils/error_handler';
-import UserRouter from './api/routes/user';
+import setupRoutes from './config/routes';
 
 const app: Express = express();
 
@@ -15,7 +14,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(cors());
 
-app.use('/users', UserRouter);
+setupRoutes(app);
 
 // main error handler
 app.use(errorHandler);
