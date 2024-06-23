@@ -12,7 +12,7 @@ dotenv.config();
 
 class UserService {
     // gets all users
-    async getAll(username: string | undefined, limit?: number, offset?: number): Promise<User[]> {
+    async getAll(username: string | undefined, limit: number | undefined, offset: number | undefined): Promise<User[]> {
         const users: User[] = await UserDAO.getAll({
             where: {
                 ...(username && {
