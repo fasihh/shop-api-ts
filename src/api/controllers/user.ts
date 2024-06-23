@@ -9,13 +9,13 @@ class UserController {
     async getAll(req: Request, res: Response): Promise<ReturnResponse> {
         // parsing query
         const {
-            username,
+            search,
             limit,
             offset 
         }: RequestQuery = req.queryParams;
 
         // getting users
-        const users: User[] = await UserService.getAll(username, limit, offset);
+        const users: User[] = await UserService.getAll(search, limit, offset);
 
         return res.status(200).json({
             message: 'Users fetched successfully',
