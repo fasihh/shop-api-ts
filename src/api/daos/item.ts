@@ -1,10 +1,11 @@
-import { Op } from 'sequelize';
+import { Attributes, FindOptions, Op } from 'sequelize';
 import Item from '../models/item';
 
 class ItemDAO {
     // get item by id
-    async getById(id: number): Promise<Item | null> {
-        const item: Item | null = await Item.findOne({ where: { id }});
+    async getById(id: number, options?: FindOptions<Attributes<Item>>): Promise<Item | null> {
+        console.log(options);
+        const item: Item | null = await Item.findByPk(id, options);
         return item;
     }
 
@@ -19,19 +20,20 @@ class ItemDAO {
     }
 
     // get all items
-    async getAll(): Promise<Item[]> {
-        const items: Item[] = await Item.findAll();
+    async getAll(options?: FindOptions<Attributes<Item>>): Promise<Item[]> {
+        const items: Item[] = await Item.findAll(options);
         return items;
     }
 
     // create new item
-    async create(itemname: string, price: number, description: string | undefined, creatorId: number): Promise<void> {
-        await Item.create({
+    async create(itemname: string, price: number, description: string | undefined, creator_id: number): Promise<Item> {
+        const item: Item = await Item.create({
             itemname,
             price,
             description,
-            creatorId
+            creator_id
         });
+        return item;
     }
 
     // update item by id
@@ -40,17 +42,19 @@ class ItemDAO {
         itemname: string | undefined,
         price: number | undefined,
         description: string | undefined,
-    ): Promise<void> {
-        await Item.update({
+    ): Promise<number> {
+        const [count]: [affectedCount: number] = await Item.update({
             itemname,
             price,
             description
         }, { where: { id }});
+        return count;
     }
 
     // delete item by id
-    async delete(id: number): Promise<void> {
-        await Item.destroy({ where: { id } });
+    async delete(id: number): Promise<number> {
+        const count: number = await Item.destroy({ where: { id } });
+        return count;
     }
 }
 
