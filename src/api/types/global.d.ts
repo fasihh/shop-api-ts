@@ -2,8 +2,8 @@ import type { Response } from 'express';
 
 export type ReturnResponse = Response<any, Record<string, any>>;
 
-export interface RequestParams {
+export interface RequestQuery {
     username?: string;
-    limit?: string;
-    offset?: string;
+    limit?: number;
+    offset?: number;
 }
