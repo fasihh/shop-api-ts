@@ -2,8 +2,6 @@ import app from '../app';
 import { describe, test, expect, beforeAll } from '@jest/globals';
 import request, { Response } from 'supertest';
 import User from '../api/models/user';
-import dotenv from 'dotenv';
-dotenv.config();
 
 type TestUser = { username: string, password: string, auth_token?: string };
 
