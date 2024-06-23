@@ -74,6 +74,22 @@ describe('Create and Login users', () => {
     });
 });
 
+describe('Get users', () => {
+    test('Get all users: should respond with status 200', async () => {
+        const response: Response = await request(app)
+        .get('/users')
+        .set({
+            limit: '2',
+            offset: '0'
+        });
+
+        expect(response.statusCode).toBe(200);
+        expect(response.body).toHaveProperty('users');
+        expect(response.body).toHaveProperty('message');
+        expect(response.body).toHaveProperty('count');
+    });
+});
+
 describe('Update users', () => {
     // update user with another user's username
     test('Update username of User#1 to username of User#2: should respond with status 409', async () => {

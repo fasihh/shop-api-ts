@@ -1,7 +1,7 @@
 import { Request, Response, } from 'express';
 import UserService from '../services/user';
 import type User from '../models/user';
-import type { ReturnResponse, RequestParams } from '../types';
+import type { ReturnResponse, RequestQuery } from '../types';
 import RequestError from '../exceptions/request_error';
 import { ExceptionType } from '../exceptions/exceptions';
 
@@ -12,7 +12,7 @@ class UserController {
             username,
             limit,
             offset 
-        }: RequestParams = req.query;
+        }: RequestQuery = req.queryParams;
 
         // getting users
         const users: User[] = await UserService.getAll(username, limit, offset);

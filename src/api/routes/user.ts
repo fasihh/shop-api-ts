@@ -2,6 +2,7 @@ import { Router } from 'express';
 import UserController from '../controllers/user';
 import asyncHandler from '../utils/async_handler';
 
+import queryParser from '../utils/query_parser';
 import authHandler from '../auth/jwtAuth';
 
 const router: Router = Router();
@@ -9,7 +10,7 @@ const router: Router = Router();
 /* User endpoints */
 
 // get all users
-router.get('/', asyncHandler(UserController.getAll.bind(UserController)));
+router.get('/', queryParser, asyncHandler(UserController.getAll.bind(UserController)));
 
 // get user by id
 router.get('/id/:id', asyncHandler(UserController.getById.bind(UserController)));
