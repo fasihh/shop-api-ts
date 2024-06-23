@@ -7,7 +7,10 @@ class Item extends Model<InferAttributes<Item>, InferCreationAttributes<Item>> {
     declare itemname: string;
     declare price: number;
     declare description: CreationOptional<string>;
-    declare creatorId: ForeignKey<User['id']>;
+    declare creator_id: ForeignKey<User['id']>;
+    declare creator?: User;
+    declare createdAt?: Date;
+    declare updatedAt?: Date;
 }
 
 Item.init(
@@ -29,8 +32,9 @@ Item.init(
             type: DataTypes.STRING,
             allowNull: true
         },
-        creatorId: {
+        creator_id: {
             type: DataTypes.INTEGER.UNSIGNED,
+            allowNull: false,
             references: {
                 model: User,
                 key: 'id'
@@ -42,5 +46,16 @@ Item.init(
         tableName: 'items'
     }
 );
+
+Item.belongsTo(User, {
+    foreignKey: 'creator_id',
+    onDelete: 'CASCADE',
+    as: 'creator'
+});
+
+// User.hasMany(Item, {
+//     foreignKey: 'creator_id',
+//     onDelete: 'CASCADE'
+// });
 
 export default Item;
