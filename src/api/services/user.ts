@@ -1,7 +1,7 @@
 import UserDAO from '../daos/user';
 import type User from '../models/user';
 import bcrypt from 'bcrypt';
-import TokenService from './token';
+import AuthService from './auth';
 import RequestError from '../exceptions/request_error';
 import { ExceptionType } from '../exceptions/exceptions';
 import { Op } from 'sequelize';
@@ -64,8 +64,10 @@ class UserService {
         const status: boolean = await bcrypt.compare(password, user.password);
         if (!status) throw new RequestError(ExceptionType.AUTH_FAILURE);
 
+        if (await AuthService.isBlacklisted(user.id)) throw new RequestError(ExceptionType.UNAUTHORIZED);
+
         // creating auth token
-        const token: string = TokenService.generate(user);
+        const token: string = AuthService.generate(user);
         return token;
     }
 
@@ -92,7 +94,7 @@ class UserService {
         const user: User | null = await UserDAO.getById(id);
         if (!user) throw new RequestError(ExceptionType.USER_NOT_FOUND);
 
-        await TokenService.blacklist(id);
+        await AuthService.blacklist(id);
 
         await UserDAO.delete(id);
     }
