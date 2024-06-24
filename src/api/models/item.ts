@@ -53,9 +53,4 @@ Item.belongsTo(User, {
     as: 'creator'
 });
 
-// User.hasMany(Item, {
-//     foreignKey: 'creator_id',
-//     onDelete: 'CASCADE'
-// });
-
 export default Item;
