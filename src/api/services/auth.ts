@@ -5,7 +5,7 @@ import redis from '../../config/redis';
 import dotenv from 'dotenv';
 dotenv.config();
 
-class TokenService {
+class AuthService {
     generate(user: User): string {
         const token: string = jwt.sign({
                 id: user.id,
@@ -33,20 +33,18 @@ class TokenService {
 
     // add user id to blacklist
     async blacklist(id: number): Promise<void> {
-        await redis.set(`blacklist_${id}`, 'true', {
-            // set expiry as refresh token's
-            // done so that it expires exactly when or after the refresh token expires
-            EX: parseInt(process.env.JWT_REFRESH_TOKEN_EXPIRY || '86400')
-        });
+        // set expiry as refresh token's
+        // done so that it expires exactly when or after the refresh token expires);
+        await redis.set(`blacklist_${id}`, 'true', 'EX', parseInt(process.env.JWT_REFRESH_TOKEN_EXPIRY || '86400'));
     }
 
+    // check from blacklist
     async isBlacklisted(id: number): Promise<boolean> {
         const isBlacklisted: string | null = await redis.get(`blacklist_${id}`);
-        // this isn't really needed since anything that exists, regardless of value, is blacklisted 
         return isBlacklisted === 'true';
     }
 }
 
-const TokenServiceInst = new TokenService;
+const AuthServiceInst = new AuthService;
 
-export default TokenServiceInst;
+export default AuthServiceInst;
