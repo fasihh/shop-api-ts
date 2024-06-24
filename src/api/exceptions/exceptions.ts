@@ -5,7 +5,8 @@ export enum ExceptionType {
     ITEM_NOT_FOUND = 'ITEM_NOT_FOUND',
     INVALID_ID = 'INVALID_ID',
     INVALID_REQUEST = 'INVALID_REQUEST',
-    AUTH_FAILURE = 'AUTH_FAILURE', 
+    AUTH_FAILURE = 'AUTH_FAILURE',
+    INVALID_TOKEN = 'INVALID_TOKEN',
     UNAUTHORIZED = 'UNAUTHORIZED'
 }
 
@@ -17,5 +18,6 @@ export const Exceptions: Record<ExceptionType, { status: number, message: string
     [ExceptionType.INVALID_ID]: { status: 400, message: 'User ID is invalid' },
     [ExceptionType.INVALID_REQUEST]: { status: 400, message: 'Invalid request' },
     [ExceptionType.AUTH_FAILURE]: { status: 401, message: 'Auth failure' },
-    [ExceptionType.UNAUTHORIZED]: { status: 403, message: 'Unauthorized' }
-}
+    [ExceptionType.UNAUTHORIZED]: { status: 403, message: 'Unauthorized' },
+    [ExceptionType.INVALID_TOKEN]: { status: 401, message: 'Auth failure: token is not provided' }
+};
