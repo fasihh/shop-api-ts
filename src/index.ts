@@ -11,12 +11,15 @@ const server: Server = http.createServer(app);
 
 async function start() {
     try {
+        await new Promise((resolve, reject) => {
+            redis.on('ready', resolve);
+            redis.on('error', reject);
+        });
+        console.log('Connected to Redis');
+
         await sequelize.authenticate();
         await sequelize.sync({ alter: process.env.MODE === 'dev' })
         console.log('Connected to DB');
-
-        await redis.connect();
-        console.log('Connected to Redis');
         
         server.listen(port);
         console.log(`Server running on: http://localhost:${port}`);
