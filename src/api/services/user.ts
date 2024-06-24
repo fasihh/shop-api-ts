@@ -1,13 +1,13 @@
 import UserDAO from '../daos/user';
 import type User from '../models/user';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import TokenService from './token';
 import RequestError from '../exceptions/request_error';
 import { ExceptionType } from '../exceptions/exceptions';
 import { Op } from 'sequelize';
 
 import dotenv from 'dotenv';
-
+import { JwtPayload } from 'jsonwebtoken';
 dotenv.config();
 
 class UserService {
@@ -65,17 +65,7 @@ class UserService {
         if (!status) throw new RequestError(ExceptionType.AUTH_FAILURE);
 
         // creating auth token
-        const token: string = jwt.sign({
-                id: user.id,
-                username: user.username,
-                createdAt: user.createdAt
-            },
-            process.env.JWT_KEY || 'secret',
-            {
-                expiresIn: process.env.MODE === 'dev' ? '1y' : '1d'
-            }
-        );
-
+        const token: string = TokenService.generate(user);
         return token;
     }
 
@@ -100,8 +90,10 @@ class UserService {
     // throws exception if DNE
     async delete(id: number): Promise<void> {
         const user: User | null = await UserDAO.getById(id);
-
         if (!user) throw new RequestError(ExceptionType.USER_NOT_FOUND);
+
+        await TokenService.blacklist(id);
+
         await UserDAO.delete(id);
     }
 }
