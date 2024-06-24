@@ -3,7 +3,7 @@ import UserController from '../controllers/user';
 import asyncHandler from '../utils/async_handler';
 
 import queryParser from '../utils/query_parser';
-import authHandler from '../auth/jwtAuth';
+import authHandler from '../auth/auth_handler';
 
 const router: Router = Router();
 
@@ -23,9 +23,9 @@ router.post('/', asyncHandler(UserController.create.bind(UserController)));
 router.post('/login', asyncHandler(UserController.login.bind(UserController)));
 
 // update user
-router.patch('/', authHandler, asyncHandler(UserController.updateById.bind(UserController)));
+router.patch('/', authHandler, asyncHandler(UserController.update.bind(UserController)));
 
 // delete user
-router.delete('/', authHandler, asyncHandler(UserController.deleteById.bind(UserController)));
+router.delete('/', authHandler, asyncHandler(UserController.delete.bind(UserController)));
 
 export default router;
