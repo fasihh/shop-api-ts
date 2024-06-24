@@ -1,5 +1,6 @@
 import http, { Server } from 'http';
 import sequelize from './config/db';
+import redis from './config/redis';
 import app from './app';
 
 import dotenv from 'dotenv';
@@ -13,6 +14,10 @@ async function start() {
         await sequelize.authenticate();
         await sequelize.sync({ alter: process.env.MODE === 'dev' })
         console.log('Connected to DB');
+
+        await redis.connect();
+        console.log('Connected to Redis');
+        
         server.listen(port);
         console.log(`Server running on: http://localhost:${port}`);
     } catch (error: unknown) {
