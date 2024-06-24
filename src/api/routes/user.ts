@@ -2,8 +2,8 @@ import { Router } from 'express';
 import UserController from '../controllers/user';
 import asyncHandler from '../utils/async_handler';
 
-import queryParser from '../utils/query_parser';
-import authHandler from '../auth/auth_handler';
+import queryParser from '../middlewares/query_parser';
+import authHandler from '../middlewares/auth_handler';
 
 const router: Router = Router();
 
