@@ -64,8 +64,6 @@ class UserService {
         const status: boolean = await bcrypt.compare(password, user.password);
         if (!status) throw new RequestError(ExceptionType.AUTH_FAILURE);
 
-        if (await AuthService.isBlacklisted(user.id)) throw new RequestError(ExceptionType.UNAUTHORIZED);
-
         // creating auth token
         const token: string = AuthService.generate(user);
         return token;
@@ -90,11 +88,11 @@ class UserService {
 
     // deletes user by id
     // throws exception if DNE
-    async delete(id: number): Promise<void> {
+    async delete(id: number, token: string): Promise<void> {
         const user: User | null = await UserDAO.getById(id);
         if (!user) throw new RequestError(ExceptionType.USER_NOT_FOUND);
 
-        await AuthService.blacklist(id);
+        await AuthService.blacklist(token.replace('Bearer ', ''));
 
         await UserDAO.delete(id);
     }

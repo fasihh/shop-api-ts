@@ -120,7 +120,7 @@ class UserController {
         const id: number = req.user?.id;
         
         // deleting user
-        await UserService.delete(id);
+        await UserService.delete(id, req.headers.authorization as string);
 
         return res.status(200).json({
             message: 'User deleted successfully'

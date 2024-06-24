@@ -32,15 +32,15 @@ class AuthService {
     }
 
     // add user id to blacklist
-    async blacklist(id: number): Promise<void> {
+    async blacklist(token: string): Promise<void> {
         // set expiry as refresh token's
         // done so that it expires exactly when or after the refresh token expires);
-        await redis.set(`blacklist_${id}`, 'true', 'EX', parseInt(process.env.JWT_REFRESH_TOKEN_EXPIRY || '86400'));
+        await redis.set(`blacklist_${token}`, 'true', 'EX', parseInt(process.env.JWT_REFRESH_TOKEN_EXPIRY || '86400'));
     }
 
     // check from blacklist
-    async isBlacklisted(id: number): Promise<boolean> {
-        const isBlacklisted: string | null = await redis.get(`blacklist_${id}`);
+    async isBlacklisted(token: string): Promise<boolean> {
+        const isBlacklisted: string | null = await redis.get(`blacklist_${token}`);
         return isBlacklisted === 'true';
     }
 }

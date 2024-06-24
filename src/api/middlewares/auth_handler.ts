@@ -23,7 +23,7 @@ const authHandler = asyncHandler(async (req: Request, res: Response, next: NextF
         const decoded: JwtPayload = AuthService.validate(token);
 
         // throw error if id is blacklisted
-        if (await AuthService.isBlacklisted(decoded.id)) throw new RequestError(ExceptionType.UNAUTHORIZED);
+        if (await AuthService.isBlacklisted(token)) throw new RequestError(ExceptionType.UNAUTHORIZED);
 
         // set it in the request object for the next middleware to use 
         req.user = decoded;
