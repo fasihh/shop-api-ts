@@ -102,7 +102,7 @@ class UserController {
         });
     }
 
-    async updateById(req: Request, res: Response): Promise<ReturnResponse> {
+    async update(req: Request, res: Response): Promise<ReturnResponse> {
         // getting id from token
         const id: number = req.user?.id;
 
@@ -116,7 +116,7 @@ class UserController {
         });
     }
 
-    async deleteById(req: Request, res: Response): Promise<ReturnResponse> {
+    async delete(req: Request, res: Response): Promise<ReturnResponse> {
         const id: number = req.user?.id;
         
         // deleting user
