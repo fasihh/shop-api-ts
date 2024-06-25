@@ -4,7 +4,6 @@ import Item from '../models/item';
 class ItemDAO {
     // get item by id
     async getById(id: number, options?: FindOptions<Attributes<Item>>): Promise<Item | null> {
-        console.log(options);
         const item: Item | null = await Item.findByPk(id, options);
         return item;
     }
