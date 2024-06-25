@@ -44,7 +44,7 @@ class ItemService {
     }
 
     async update(
-        user_id: number,
+        creator_id: number,
         id: number,
         itemname: string | undefined,
         price: number | undefined,
@@ -53,16 +53,16 @@ class ItemService {
         const item: Item | null = await ItemDAO.getById(id);
         if (!item) throw new RequestError(ExceptionType.ITEM_NOT_FOUND);
 
-        if (item.creator_id !== user_id) throw new RequestError(ExceptionType.UNAUTHORIZED);
+        if (item.creator_id !== creator_id) throw new RequestError(ExceptionType.UNAUTHORIZED);
 
         await ItemDAO.update(id, itemname, price, description);
     }
 
-    async delete(user_id: number, id: number): Promise<void> {
+    async delete(creator_id: number, id: number): Promise<void> {
         const item: Item | null = await ItemDAO.getById(id);
         if (!item) throw new RequestError(ExceptionType.ITEM_NOT_FOUND);
 
-        if (item.creator_id !== user_id) throw new RequestError(ExceptionType.UNAUTHORIZED);
+        if (item.creator_id !== creator_id) throw new RequestError(ExceptionType.UNAUTHORIZED);
 
         await ItemDAO.delete(id);
     }
