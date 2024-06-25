@@ -5,9 +5,9 @@ import AuthService from './auth';
 import RequestError from '../exceptions/request_error';
 import { ExceptionType } from '../exceptions/exceptions';
 import { Op } from 'sequelize';
+import CartDAO from '../daos/cart';
 
 import dotenv from 'dotenv';
-import { JwtPayload } from 'jsonwebtoken';
 dotenv.config();
 
 class UserService {
@@ -31,14 +31,12 @@ class UserService {
     // throws exception if DNE
     async getById(id: number): Promise<User> {
         const user: User | null = await UserDAO.getById(id);
-
         if (!user) throw new RequestError(ExceptionType.USER_NOT_FOUND);
         return user;
     }
 
     async getByName(username: string): Promise<User> {
         const user: User | null = await UserDAO.getByName(username);
-
         if (!user) throw new RequestError(ExceptionType.USER_NOT_FOUND);
         return user;
     }
@@ -46,11 +44,16 @@ class UserService {
     // creates a user
     // throws exception if conflict
     async create(username: string, password: string): Promise<number> {
-        const user: User | null = await UserDAO.getByName(username);
-        if (user) throw new RequestError(ExceptionType.USERNAME_CONFLICT);
+        const check: User | null = await UserDAO.getByName(username);
+        if (check) throw new RequestError(ExceptionType.USERNAME_CONFLICT);
 
         const hashed: string = await bcrypt.hash(password, 10);
-        return (await UserDAO.create(username, hashed)).id;
+        const user: User = await UserDAO.create(username, hashed);
+
+        // create a cart for the user by default when a user is created
+        await CartDAO.create(user.id);
+
+        return user.id;
     }
 
     // logs in user
