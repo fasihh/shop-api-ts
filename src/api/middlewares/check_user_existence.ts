@@ -11,7 +11,7 @@ import { ExceptionType } from '../exceptions/exceptions';
 const checkUserExists = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const user: User | null = await UserDAO.getById(req.user?.id);
 
-    if (!user) throw new RequestError(ExceptionType.UNAUTHORIZED);
+    if (!user || user.username !== req.user?.username) throw new RequestError(ExceptionType.UNAUTHORIZED);
     next();
 });
 
