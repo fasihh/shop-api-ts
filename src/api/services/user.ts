@@ -58,8 +58,8 @@ class UserService {
 
     // logs in user
     // throws Auth failure exceptions
-    async login(username: string, password: string): Promise<string> {
-        // checking if user exixts
+    async login(username: string, password: string): Promise<Record<string, string>> {
+        // checking if user exists
         const user: User | null = await UserDAO.getByName(username);
         if (!user) throw new RequestError(ExceptionType.AUTH_FAILURE);
 
@@ -68,8 +68,8 @@ class UserService {
         if (!status) throw new RequestError(ExceptionType.AUTH_FAILURE);
 
         // creating auth token
-        const token: string = AuthService.generate(user);
-        return token;
+        const tokens: Record<string, string> = AuthService.generate(user);
+        return tokens;
     }
 
     // updates by id of the username and/or password of the user

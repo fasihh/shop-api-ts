@@ -93,12 +93,12 @@ class UserController {
 
         if (!username || !password) throw new RequestError(ExceptionType.INVALID_REQUEST);
 
-        const token: string = await UserService.login(username, password);
+        const tokens: Record<string, string> = await UserService.login(username, password);
 
         return res.status(200).json({
             message: 'Login successful',
             token_type: 'Bearer',
-            token
+            token: tokens.access_token
         });
     }
 

@@ -20,7 +20,7 @@ const authHandler = asyncHandler(async (req: Request, res: Response, next: NextF
 
     try {
         // get decoded user data
-        const decoded: JwtPayload = AuthService.validate(token);
+        const decoded: JwtPayload = AuthService.validate_access(token);
 
         // throw error if id is blacklisted
         if (await AuthService.isBlacklisted(token)) throw new RequestError(ExceptionType.UNAUTHORIZED);
