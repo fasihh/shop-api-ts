@@ -57,20 +57,47 @@ class ItemController {
             description
         }: {
             itemname: string | undefined,
-            price: string | undefined,
+            price: number | undefined,
             description: string | undefined
         } = req.body;
 
         if (!itemname || !price) throw new RequestError(ExceptionType.INVALID_REQUEST);
 
-        const price_f: number = parseFloat(price);
-
-        if (isNaN(price_f)) throw new RequestError(ExceptionType.INVALID_REQUEST);
-
-        const item: Item = await ItemService.create(itemname, price_f, req.user?.id, description);
+        const item: Item = await ItemService.create(itemname, price, req.user?.id, description);
         return res.status(201).json({
             message: 'Item created successfully',
             item_id: item.id
+        });
+    }
+
+    async update(req: Request, res: Response): Promise<ReturnResponse> {
+        const id: number = parseInt(req.params.id);
+        if (isNaN(id)) throw new RequestError(ExceptionType.INVALID_ID);
+
+        const {
+            itemname,
+            price, 
+            description
+        }: { 
+            itemname: string | undefined,
+            price: number | undefined,
+            description: string | undefined
+        } = req.body;
+
+        await ItemService.update(req.user?.id, id, itemname, price, description);
+        return res.status(200).json({
+            message: 'Item updated successfully'
+        });
+    }
+
+    async delete(req: Request, res: Response): Promise<ReturnResponse> {
+        const id: number = parseInt(req.params.id);
+        if (isNaN(id)) throw new RequestError(ExceptionType.INVALID_ID);
+
+        await ItemService.delete(req.user?.id, id);
+
+        return res.status(200).json({
+            message: 'Item deleted successfully'
         });
     }
 }
