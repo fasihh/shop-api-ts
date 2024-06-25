@@ -2,6 +2,7 @@ import http, { Server } from 'http';
 import sequelize from './config/db';
 import redis from './config/redis';
 import app from './app';
+import setupAssociations from './api/models/associations/associations';
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -18,7 +19,12 @@ async function start() {
         console.log('Connected to Redis');
 
         await sequelize.authenticate();
-        await sequelize.sync({ alter: process.env.MODE === 'dev' })
+        setupAssociations();
+
+        await sequelize.query('SET FOREIGN_KEY_CHECKS = 0;');
+        await sequelize.sync({ force: process.env.MODE === 'dev' })
+        await sequelize.query('SET FOREIGN_KEY_CHECKS = 1;');
+
         console.log('Connected to DB');
         
         server.listen(port);
