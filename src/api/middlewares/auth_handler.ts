@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import asyncHandler from '../utils/async_handler';
+import asyncHandler from './async_handler';
 import AuthService from '../services/auth';
 import { ReturnResponse } from '../types';
 import RequestError from '../exceptions/request_error';

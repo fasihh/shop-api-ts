@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import UserController from '../controllers/user';
-import asyncHandler from '../utils/async_handler';
+import asyncHandler from '../middlewares/async_handler';
 
 import queryParser from '../middlewares/query_parser';
 import authHandler from '../middlewares/auth_handler';
