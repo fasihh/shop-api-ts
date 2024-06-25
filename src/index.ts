@@ -22,7 +22,7 @@ async function start() {
         setupAssociations();
 
         await sequelize.query('SET FOREIGN_KEY_CHECKS = 0;');
-        await sequelize.sync({ force: process.env.MODE === 'dev' })
+        await sequelize.sync({ alter: process.env.MODE === 'dev' })
         await sequelize.query('SET FOREIGN_KEY_CHECKS = 1;');
 
         console.log('Connected to DB');
