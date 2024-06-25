@@ -83,10 +83,7 @@ class UserService {
             if (user && user.id !== id) throw new RequestError(ExceptionType.USERNAME_CONFLICT);
         }
         
-        let hashed: string | undefined = password;
-        if (password) hashed = await bcrypt.hash(password, 10);
-
-        await UserDAO.update(id, username, hashed);
+        await UserDAO.update(id, username, password);
     }
 
     // deletes user by id

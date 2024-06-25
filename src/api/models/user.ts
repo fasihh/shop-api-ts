@@ -1,5 +1,6 @@
 import { InferAttributes, InferCreationAttributes, Model, CreationOptional, DataTypes } from "sequelize";
 import sequelize from "../../config/db";
+import bcrypt from 'bcrypt';
 
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
     declare id: CreationOptional<number>;
@@ -27,7 +28,18 @@ User.init(
     },
     {
         sequelize,
-        tableName: 'users'
+        tableName: 'users',
+        hooks: {
+            beforeCreate: async (user: User, options: unknown) => {
+                try {
+                    console.log(options);
+                    const hashed = await bcrypt.hash(user.password, 10);
+                    user.password = hashed;
+                } catch(err: unknown) {
+                    console.error('Password could not be hashed: ', err);
+                }
+            }
+        }
     }
 );
 
