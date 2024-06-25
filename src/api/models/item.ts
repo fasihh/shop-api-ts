@@ -47,10 +47,4 @@ Item.init(
     }
 );
 
-Item.belongsTo(User, {
-    foreignKey: 'creator_id',
-    onDelete: 'CASCADE',
-    as: 'creator'
-});
-
 export default Item;
