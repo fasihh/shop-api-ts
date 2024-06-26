@@ -5,7 +5,7 @@ const errorHandler = (error: Error | RequestError, req: Request, res: Response, 
     let error_status: number;
     let error_name: string;
     let error_message: string;
-    let error_info: Record<string, string> | undefined;
+    let error_info: string | undefined;
 
     if (error instanceof RequestError) {
         error_status = error.status || 500;
