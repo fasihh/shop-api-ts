@@ -2,6 +2,11 @@ import CartItem from "../models/cart_item";
 import Item from "../models/item";
 
 class CartItemDAO {
+    async getById(id: number): Promise<CartItem | null> {
+        const cart_item: CartItem | null = await CartItem.findByPk(id);
+        return cart_item;
+    }
+
     async getByCartId(cart_id: number): Promise<CartItem[]> {
         const cart_items: CartItem[] = await CartItem.findAll({
             where: {
