@@ -47,8 +47,7 @@ class UserService {
         const check: User | null = await UserDAO.getByName(username);
         if (check) throw new RequestError(ExceptionType.USERNAME_CONFLICT);
 
-        const hashed: string = await bcrypt.hash(password, 10);
-        const user: User = await UserDAO.create(username, hashed);
+        const user: User = await UserDAO.create(username, password);
 
         // create a cart for the user by default when a user is created
         await CartDAO.create(user.id);
