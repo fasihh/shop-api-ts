@@ -19,6 +19,7 @@ const errorHandler = (error: Error | RequestError, req: Request, res: Response, 
         error_info = undefined;
     }
 
+    console.error(error);
     res.status(error_status).json({
         error: {
             name: error_name,
