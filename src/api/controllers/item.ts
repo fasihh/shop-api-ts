@@ -61,7 +61,7 @@ class ItemController {
             description: string | undefined
         } = req.body;
 
-        if (!itemname || !price) throw new RequestError(ExceptionType.INVALID_REQUEST);
+        if (!itemname || (!price && price !== 0)) throw new RequestError(ExceptionType.INVALID_REQUEST);
 
         const item: Item = await ItemService.create(itemname, price, req.user?.id, description);
         return res.status(201).json({
