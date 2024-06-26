@@ -58,7 +58,7 @@ class UserService {
 
     // logs in user
     // throws Auth failure exceptions
-    async login(username: string, password: string): Promise<Record<string, string>> {
+    async login(username: string, password: string): Promise<string> {
         // checking if user exists
         const user: User | null = await UserDAO.getByName(username);
         if (!user) throw new RequestError(ExceptionType.AUTH_FAILURE);
@@ -68,7 +68,7 @@ class UserService {
         if (!status) throw new RequestError(ExceptionType.AUTH_FAILURE);
 
         // creating auth token
-        const tokens: Record<string, string> = AuthService.generate(user);
+        const tokens: string = AuthService.generate_access(user);
         return tokens;
     }
 
@@ -88,11 +88,9 @@ class UserService {
 
     // deletes user by id
     // throws exception if DNE
-    async delete(id: number, token: string): Promise<void> {
+    async delete(id: number): Promise<void> {
         const user: User | null = await UserDAO.getById(id);
         if (!user) throw new RequestError(ExceptionType.USER_NOT_FOUND);
-
-        await AuthService.blacklist(token.replace('Bearer ', ''));
 
         await UserDAO.delete(id);
     }

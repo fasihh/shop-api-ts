@@ -1,6 +1,6 @@
 import http, { Server } from 'http';
 import sequelize from './config/db';
-import redis from './config/redis';
+// import redis from './config/redis';
 import app from './app';
 import setupAssociations from './api/models/associations/associations';
 
@@ -12,11 +12,11 @@ const server: Server = http.createServer(app);
 
 async function start() {
     try {
-        await new Promise((resolve, reject) => {
-            redis.on('ready', resolve);
-            redis.on('error', reject);
-        });
-        console.log('Connected to Redis');
+        // await new Promise((resolve, reject) => {
+        //     redis.on('ready', resolve);
+        //     redis.on('error', reject);
+        // });
+        // console.log('Connected to Redis');
 
         await sequelize.authenticate();
         setupAssociations();
