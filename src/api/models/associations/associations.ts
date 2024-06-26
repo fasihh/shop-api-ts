@@ -22,6 +22,7 @@ const setupAssociations = () => {
     
     CartItem.belongsTo(Item, {
         foreignKey: 'item_id',
+        as: 'item'
     });
 }
 
