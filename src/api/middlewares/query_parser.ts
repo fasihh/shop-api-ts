@@ -15,9 +15,9 @@ const queryParser = (req: Request, res: Response, next: NextFunction) => {
     
     req.queryParams = {
         search,
-        limit: parseInt(limit ?? '20', 10) || 20,
-        offset: parseInt(offset ?? '0', 10) || 0,
-        quantity: parseInt(quantity ?? '1', 10) || 1 
+        limit: Math.abs(Number(limit ?? '20')) || 20,
+        offset: Math.abs(Number(offset ?? '0')) || 0,
+        quantity: Math.abs(Number(quantity ?? '1')) || 1 
     };
 
     next();
