@@ -3,6 +3,7 @@ import asyncHandler from '../middlewares/async_handler';
 import CartController from '../controllers/cart';
 import authHandler from '../middlewares/auth_handler';
 import queryParser from '../middlewares/query_parser';
+import idParser from '../middlewares/id_parser';
 
 const router: Router = Router();
 
@@ -15,12 +16,12 @@ router.get('/', authHandler, asyncHandler(CartController.getActiveCart.bind(Cart
 router.get('/checkout', authHandler, asyncHandler(CartController.checkout.bind(CartController)));
 
 // add item to cart
-router.post('/:id', authHandler, queryParser, asyncHandler(CartController.addToCart.bind(CartController)));
+router.post('/:id', authHandler, idParser, queryParser, asyncHandler(CartController.addToCart.bind(CartController)));
 
 // remove item from cart
-router.delete('/:cart_item_id', authHandler, asyncHandler(CartController.removeFromCart.bind(CartController)));
+router.delete('/:id', authHandler, idParser, asyncHandler(CartController.removeFromCart.bind(CartController)));
 
 // update quantity of cart item
-router.patch('/:cart_item_id', authHandler, queryParser, asyncHandler(CartController.updateCartItem.bind(CartController)));
+router.patch('/:id', authHandler, idParser, queryParser, asyncHandler(CartController.updateCartItem.bind(CartController)));
 
 export default router;

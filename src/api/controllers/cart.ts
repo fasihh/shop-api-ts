@@ -1,8 +1,6 @@
 import { Request, Response } from 'express';
 import type { CartInfo, ReturnResponse } from '../types';
 import CartService from '../services/cart';
-import RequestError from '../exceptions/request_error';
-import { ExceptionType } from '../exceptions/exceptions';
 import type CartItem from '../models/cart_item';
 
 class CartController {
@@ -23,9 +21,7 @@ class CartController {
     }
 
     async addToCart(req: Request, res: Response): Promise<ReturnResponse> {
-        const id: number = parseInt(req.params.id);
-        if (isNaN(id)) throw new RequestError(ExceptionType.INVALID_ID);
-
+        const id: number = req.id as number;
         const quantity: number | undefined = req.queryParams.quantity;
 
         const cart_item_id: number = await CartService.addToCart(id, req.user?.id, quantity);
@@ -37,10 +33,9 @@ class CartController {
     }
 
     async removeFromCart(req: Request, res: Response): Promise<ReturnResponse> {
-        const cart_item_id: number = parseInt(req.params.cart_item_id);
-        if (isNaN(cart_item_id)) throw new RequestError(ExceptionType.INVALID_ID);
+        const id: number = req.id as number;
 
-        await CartService.removeFromCart(req.user?.id, cart_item_id);
+        await CartService.removeFromCart(req.user?.id, id);
 
         return res.status(200).json({
             message: 'Cart item removed successfully',
@@ -48,12 +43,10 @@ class CartController {
     }
 
     async updateCartItem(req: Request, res: Response): Promise<ReturnResponse> {
-        const cart_item_id: number = parseInt(req.params.cart_item_id);
-        if (isNaN(cart_item_id)) throw new RequestError(ExceptionType.INVALID_ID);
-
+        const id: number = req.id as number;
         const quantity: number = req.queryParams.quantity as number;
 
-        await CartService.updateCartItem(req.user?.id, cart_item_id, quantity);
+        await CartService.updateCartItem(req.user?.id, id, quantity);
 
         return res.status(200).json({
             message: 'Cart item updated successfully'

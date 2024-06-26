@@ -20,15 +20,14 @@ class ItemController {
             items: items.map(item => ({
                 id: item.id,
                 itemname: item.itemname,
+                price: item.price,
                 creator_id: item.creator_id
             }))
         })
     }
 
     async getById(req: Request, res: Response): Promise<ReturnResponse> {
-        const id: number = parseInt(req.params.id);
-
-        if (isNaN(id)) throw new RequestError(ExceptionType.INVALID_ID);
+        const id: number = req.id as number;
 
         const item: Item = await ItemService.getById(id);
         return res.status(200).json({
@@ -71,8 +70,7 @@ class ItemController {
     }
 
     async update(req: Request, res: Response): Promise<ReturnResponse> {
-        const id: number = parseInt(req.params.id);
-        if (isNaN(id)) throw new RequestError(ExceptionType.INVALID_ID);
+        const id: number = req.id as number;
 
         const {
             itemname,
