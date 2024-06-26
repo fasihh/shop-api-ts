@@ -17,4 +17,10 @@ router.get('/checkout', authHandler, asyncHandler(CartController.checkout.bind(C
 // add item to cart
 router.post('/:id', authHandler, queryParser, asyncHandler(CartController.addToCart.bind(CartController)));
 
+// remove item from cart
+router.delete('/:cart_item_id', authHandler, asyncHandler(CartController.removeFromCart.bind(CartController)));
+
+// update quantity of cart item
+router.patch('/:cart_item_id', authHandler, queryParser, asyncHandler(CartController.updateCartItem.bind(CartController)));
+
 export default router;

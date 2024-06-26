@@ -36,6 +36,30 @@ class CartController {
         })
     }
 
+    async removeFromCart(req: Request, res: Response): Promise<ReturnResponse> {
+        const cart_item_id: number = parseInt(req.params.cart_item_id);
+        if (isNaN(cart_item_id)) throw new RequestError(ExceptionType.INVALID_ID);
+
+        await CartService.removeFromCart(req.user?.id, cart_item_id);
+
+        return res.status(200).json({
+            message: 'Cart item removed successfully',
+        });
+    }
+
+    async updateCartItem(req: Request, res: Response): Promise<ReturnResponse> {
+        const cart_item_id: number = parseInt(req.params.cart_item_id);
+        if (isNaN(cart_item_id)) throw new RequestError(ExceptionType.INVALID_ID);
+
+        const quantity: number = req.queryParams.quantity as number;
+
+        await CartService.updateCartItem(req.user?.id, cart_item_id, quantity);
+
+        return res.status(200).json({
+            message: 'Cart item updated successfully'
+        });
+    }
+
     async checkout(req: Request, res: Response): Promise<ReturnResponse> {
         const bill: Record<string, unknown> = await CartService.checkout(req.user?.id);
 
