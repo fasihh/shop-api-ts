@@ -18,11 +18,13 @@ const setupAssociations = () => {
     
     Cart.belongsTo(User, {
         foreignKey: 'user_id',
+        onDelete: 'CASCADE',
     });
     
     CartItem.belongsTo(Item, {
         foreignKey: 'item_id',
-        as: 'item'
+        as: 'item',
+        onDelete: 'CASCADE'
     });
 }
 
