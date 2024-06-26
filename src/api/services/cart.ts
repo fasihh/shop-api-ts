@@ -1,9 +1,11 @@
 import CartDAO from '../daos/cart';
 import CartItemDAO from '../daos/cart_item';
+import ItemDAO from '../daos/item';
 import { ExceptionType } from '../exceptions/exceptions';
 import RequestError from '../exceptions/request_error';
 import type Cart from '../models/cart';
-import CartItem from '../models/cart_item';
+import type CartItem from '../models/cart_item';
+import type Item from '../models/item';
 import type { CartInfo } from '../types';
 
 class CartService {
@@ -54,6 +56,9 @@ class CartService {
     }
 
     async addToCart(item_id: number, user_id: number, quantity?: number): Promise<number> {
+        const item: Item | null = await ItemDAO.getById(item_id);
+        if (!item) throw new RequestError(ExceptionType.ITEM_NOT_FOUND);
+
         // again, the edge case
         const cart: Cart | null = await CartDAO.getByUserId(user_id);
         if (!cart) throw new RequestError(ExceptionType.CART_NOT_FOUND);
